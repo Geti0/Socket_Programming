@@ -8,3 +8,11 @@ ADDR = (IP, PORT)
 SIZE = 1024
 FORMAT = "utf-8"
 DISCONNECT_MSG = "!DISCONNECT"
+
+
+def main():
+    pass
+
+
+if __name__ == "__main__" :
+    main()
