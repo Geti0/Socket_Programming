@@ -11,7 +11,11 @@ DISCONNECT_MSG = "!DISCONNECT"
 
 
 def main():
-    pass
+    print("[STARTING] Server is starting...")
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(ADDR)
+    server.listen(4)
+    print(f"[LISTENING] Server is listening on {IP}  :   {PORT}")
 
 
 if __name__ == "__main__" :

@@ -9,8 +9,24 @@ DISCONNECT_MSG = "!DISCONNECT"
 
 
 def main():
-    pass
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect(ADDR)
+    print(f"[CONNECTED] Client connected to server at {IP}:{PORT}")
+    connected = True
 
+    while connected:
+        msg = input("Type for something you want to search> ")
+
+        client.send(msg.encode(FORMAT))
+
+        if msg == DISCONNECT_MSG:
+            connected = False
+        else:
+            msg = client.recv(SIZE).decode(FORMAT)
+            print(f"[SERVER] {msg}")
+
+def file_type(type):
+    pass
 
 if __name__ == "__main__":
     main()
