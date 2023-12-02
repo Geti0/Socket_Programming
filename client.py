@@ -26,7 +26,19 @@ def main():
             print(f"[SERVER] {msg}")
 
 def file_type(type):
-    pass
+    match type:
+        case 'read':
+            f = open("read.txt", "r")
+            print(f.read())
+        case 'write':
+            f = open("read.txt", "a")
+            f.write("Now the file has more content!")
+            f.close()
+
+            f = open("read.txt", "r")
+            print(f.read())
+        case 'execute':
+            print("Execute..")
 
 if __name__ == "__main__":
     main()

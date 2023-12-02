@@ -17,6 +17,14 @@ def main():
     server.listen(4)
     print(f"[LISTENING] Server is listening on {IP}  :   {PORT}")
 
+    while True:
+        conn, addr = server.accept()
+        thread = threading.Thread(target=handle_client, args=(conn, addr))
+        thread.start()
+
+        print(f"[ACTIVE CONNECTIONS] "
+              f"{threading.active_count()-1}")
+
 
 if __name__ == "__main__" :
     main()
