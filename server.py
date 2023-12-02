@@ -1,51 +1,26 @@
 import socket
 import threading
-import os
+import wikipedia
 
 IP = socket.gethostbyname(socket.gethostname())
 PORT = 1235
 ADDR = (IP, PORT)
 SIZE = 1024
 FORMAT = "utf-8"
-DISCONNECT_MSG = "DISCONNECT"
-ACCESS_GRANTED_MSG = "!ACCESS_GRANTED"
-DIRECTORY_PATH = "C:/Users/Getuar/Documents/GitHub/Socket_Programming"
-def send_file_contents(conn, filename):
-    file_path = os.path.join(DIRECTORY_PATH, filename)
-    try:
-        with open(file_path, 'r') as file:
-            contents = file.read()
-            conn.send(contents.encode(FORMAT))
-    except FileNotFoundError:
-        conn.send("File not found.".encode(FORMAT))
+DISCONNECT_MSG = "!DISCONNECT"
 
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     connected = True
-
-
-
-    if addr[0] == "client_with_full_access_ip":
-        privileges = {"read", "write", "execute"}
-    else:
-        privileges = {"read"}
-
-    access_msg = f"Access granted. Privileges: {privileges}"
-
-
-
-
-    conn.send(ACCESS_GRANTED_MSG.encode(FORMAT))
-
     while connected:
         msg = conn.recv(SIZE).decode(FORMAT)
         if msg == DISCONNECT_MSG:
             connected = False
+        print(f"[{addr}] {msg}")
+        # msg = f"Msg received: {msg}"
+        msg = wikipedia.summary(msg, sentences=1)
 
-            print(f"[{addr}] {msg}")
-            if msg.startswith("!GET_FILE "):
-                filename = msg[len("!GET_FILE "):]
-                send_file_contents(conn, filename)
+        conn.send(msg.encode(FORMAT))
 
     conn.close()
 
@@ -60,8 +35,9 @@ def main():
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.active_count()-1}")
 
+        print(f"[ACTIVE CONNECTIONS] "
+              f"{threading.active_count()-1}")
 
-if __name__ == "__main__":
+if __name__ == "__main__" :
     main()
