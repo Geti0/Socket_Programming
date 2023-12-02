@@ -7,7 +7,7 @@ PORT = 1235
 ADDR = (IP, PORT)
 SIZE = 1024
 FORMAT = "utf-8"
-DISCONNECT_MSG = "!DISCONNECT"
+DISCONNECT_MSG = "DISCONNECT"
 ACCESS_GRANTED_MSG = "!ACCESS_GRANTED"
 DIRECTORY_PATH = "C:/Users/Getuar/Documents/GitHub/Socket_Programming"  # Change this to the desired directory path
 
@@ -24,6 +24,19 @@ def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     connected = True
 
+
+
+    if addr[0] == "client_with_full_access_ip":
+        privileges = {"read", "write", "execute"}
+    else:
+        privileges = {"read"}
+
+        # Send access message including privileges to the client
+    access_msg = f"Access granted. Privileges: {privileges}"
+
+
+
+
     # Send access granted message
     conn.send(ACCESS_GRANTED_MSG.encode(FORMAT))
 
@@ -31,9 +44,8 @@ def handle_client(conn, addr):
         msg = conn.recv(SIZE).decode(FORMAT)
         if msg == DISCONNECT_MSG:
             connected = False
-        else:
-            print(f"[{addr}] {msg}")
 
+            print(f"[{addr}] {msg}")
             # Check if the message is a request for file contents
             if msg.startswith("!GET_FILE "):
                 filename = msg[len("!GET_FILE "):]
@@ -52,8 +64,8 @@ def main():
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-
         print(f"[ACTIVE CONNECTIONS] {threading.active_count()-1}")
+
 
 if __name__ == "__main__":
     main()

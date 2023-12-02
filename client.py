@@ -1,6 +1,3 @@
-
-
-
 import socket
 
 IP = socket.gethostbyname(socket.gethostname())
@@ -8,7 +5,7 @@ PORT = 1235
 ADDR = (IP, PORT)
 SIZE = 1024
 FORMAT = "utf-8"
-DISCONNECT_MSG = "!DISCONNECT"
+DISCONNECT_MSG = "modify"
 
 
 def main():
@@ -22,13 +19,13 @@ def main():
     print(f"[SERVER] {access_msg}")
 
     while connected:
-        msg = input("Type for something you want to search or enter '!GET_FILE filename' to request a file> ")
+        msg = input("Type modify to read,write or execute or search 'GET_FILE (type ur file name)' to request a file> ").lower()
 
         client.send(msg.encode(FORMAT))
 
         if msg == DISCONNECT_MSG:
             connected = False
-        elif msg.startswith("!GET_FILE "):
+        elif msg.startswith("GET_FILE "):
             file_contents = client.recv(SIZE).decode(FORMAT)
             print(f"[SERVER] File contents:\n{file_contents}")
         else:
@@ -43,7 +40,8 @@ def file_type(type):
             print(f.read())
         case 'write':
             f = open("read.txt", "a")
-            f.write("Now the file has more content!")
+            a = input("What do u want to add? :")
+            f.write(a)
             f.close()
 
             f = open("read.txt", "r")
