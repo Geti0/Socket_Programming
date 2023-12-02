@@ -9,6 +9,21 @@ SIZE = 1024
 FORMAT = "utf-8"
 DISCONNECT_MSG = "!DISCONNECT"
 
+def handle_client(conn, addr):
+    print(f"[NEW CONNECTION] {addr} connected.")
+    connected = True
+    while connected:
+        msg = conn.recv(SIZE).decode(FORMAT)
+        if msg == DISCONNECT_MSG:
+            connected = False
+        print(f"[{addr}] {msg}")
+        # msg = f"Msg received: {msg}"
+        msg = wikipedia.summary(msg, sentences=1)
+
+        conn.send(msg.encode(FORMAT))
+
+    conn.close()
+
 
 def main():
     print("[STARTING] Server is starting...")
